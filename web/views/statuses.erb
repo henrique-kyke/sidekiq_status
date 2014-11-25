@@ -58,6 +58,11 @@
     </tr>
   <% end -%>
 </table>
+<style type="text/css">
+  .progress-striped{
+    background-color: #00dd00;
+  }
+</style>
 
 
 <%= erb :_paging, :locals => { :url => "#{root_path}statuses" } %>
