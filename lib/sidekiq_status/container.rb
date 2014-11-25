@@ -350,7 +350,7 @@ module SidekiqStatus
           'at'              => self.at,
           'total'           => self.total,
           'message'         => self.message,
-          'parent'          => self.parent
+          'parent'          => self.parent,
 
           'payload'         => self.payload,
           'last_updated_at' => Time.now.to_i
