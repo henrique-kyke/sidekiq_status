@@ -34,11 +34,12 @@ module SidekiqStatus
         'at'      => 0,
         'total'   => 100,
         'message' => nil,
-        'parent'  => nil,
+        'parent_id'  => nil,
+        'parent_class_name'  => nil,
         'payload' => {}
     }.freeze
 
-    attr_reader :jid, :args, :worker, :queue, :parent
+    attr_reader :jid, :args, :worker, :queue, :parent_id, :parent_class_name
     attr_reader :status, :at, :total, :message, :last_updated_at
     attr_accessor :payload
 
@@ -271,8 +272,15 @@ module SidekiqStatus
       @total = @at if @total < @at
     end
 
-    def parent=(parent)
-      @parent = parent
+    def parent_id=(parent_id)
+      @parent_id = parent_id
+    end
+    def parent_class_name=(parent_class_name)
+      @parent_class_name = parent_class_name
+    end
+
+    def parent
+      "#{@parent_id}-#{@parent_class_name}"
     end
 
     # Report the estimated upper limit of {SidekiqStatus::Container#at= job items}
@@ -330,7 +338,7 @@ module SidekiqStatus
     def load(data)
       data = DEFAULTS.merge(data)
 
-      @args, @worker, @queue, @parent      = data.values_at('args', 'worker', 'queue', 'parent')
+      @args, @worker, @queue, @parent_id, @parent_class_name  = data.values_at('args', 'worker', 'queue', 'parent_id', 'parent_class_name')
       @status, @at, @total, @message = data.values_at('status', 'at', 'total', 'message')
       @payload                       = data['payload']
       @last_updated_at               = data['last_updated_at'] && Time.at(data['last_updated_at'].to_i)
@@ -350,7 +358,8 @@ module SidekiqStatus
           'at'              => self.at,
           'total'           => self.total,
           'message'         => self.message,
-          'parent'          => self.parent,
+          'parent_id'          => self.parent_id,
+          'parent_class_name'          => self.parent_class_name,
 
           'payload'         => self.payload,
           'last_updated_at' => Time.now.to_i

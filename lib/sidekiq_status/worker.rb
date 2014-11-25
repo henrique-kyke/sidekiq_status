@@ -60,8 +60,11 @@ module SidekiqStatus
         self.sc.update_attributes('payload' => payload)
       end
 
-      def parent=(parent)
-        self.sc.update_attributes('parent' => parent)
+      def parent_id=(parent_id)
+        self.sc.update_attributes('parent_id' => parent_id)
+      end
+      def parent_class_name=(parent_class_name)
+        self.sc.update_attributes('parent_class_name' => parent_class_name)
       end
     end
   end
