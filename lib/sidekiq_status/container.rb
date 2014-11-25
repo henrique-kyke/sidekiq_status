@@ -330,7 +330,7 @@ module SidekiqStatus
     def load(data)
       data = DEFAULTS.merge(data)
 
-      @args, @worker, @queue         = data.values_at('args', 'worker', 'queue', 'parent')
+      @args, @worker, @queue, @parent      = data.values_at('args', 'worker', 'queue', 'parent')
       @status, @at, @total, @message = data.values_at('status', 'at', 'total', 'message')
       @payload                       = data['payload']
       @last_updated_at               = data['last_updated_at'] && Time.at(data['last_updated_at'].to_i)
