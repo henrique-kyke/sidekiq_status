@@ -59,6 +59,10 @@ module SidekiqStatus
       def payload=(payload)
         self.sc.update_attributes('payload' => payload)
       end
+
+      def parent=(parent)
+        self.sc.update_attributes('parent' => parent)
+      end
     end
   end
 end

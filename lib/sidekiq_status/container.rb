@@ -23,7 +23,7 @@ module SidekiqStatus
     STATUSES_KEY          = 'sidekiq_statuses'.freeze
 
     class_attribute :ttl
-    self.ttl = 60*60*24*30 # 30 days
+    self.ttl = 60*60*3 # 30 days
 
     # Default attribute values (assigned to a newly created container if not explicitly defined)
     DEFAULTS = {
@@ -34,10 +34,11 @@ module SidekiqStatus
         'at'      => 0,
         'total'   => 100,
         'message' => nil,
+        'parent'  => nil,
         'payload' => {}
     }.freeze
 
-    attr_reader :jid, :args, :worker, :queue
+    attr_reader :jid, :args, :worker, :queue, :parent
     attr_reader :status, :at, :total, :message, :last_updated_at
     attr_accessor :payload
 
@@ -258,6 +259,7 @@ module SidekiqStatus
     end
 
     # @return [Integer] Job progress in percents (reported solely by {SidekiqStatus::Worker job})
+
     def pct_complete
       (at.to_f / total * 100).round
     end
@@ -267,6 +269,10 @@ module SidekiqStatus
       raise ArgumentError, "at=#{at.inspect} is not a scalar number" unless at.is_a?(Numeric)
       @at = at
       @total = @at if @total < @at
+    end
+
+    def parent=(parent)
+      @parent = parent
     end
 
     # Report the estimated upper limit of {SidekiqStatus::Container#at= job items}
@@ -324,7 +330,7 @@ module SidekiqStatus
     def load(data)
       data = DEFAULTS.merge(data)
 
-      @args, @worker, @queue         = data.values_at('args', 'worker', 'queue')
+      @args, @worker, @queue         = data.values_at('args', 'worker', 'queue', 'parent')
       @status, @at, @total, @message = data.values_at('status', 'at', 'total', 'message')
       @payload                       = data['payload']
       @last_updated_at               = data['last_updated_at'] && Time.at(data['last_updated_at'].to_i)
@@ -344,6 +350,7 @@ module SidekiqStatus
           'at'              => self.at,
           'total'           => self.total,
           'message'         => self.message,
+          'parent'          => self.parent
 
           'payload'         => self.payload,
           'last_updated_at' => Time.now.to_i
@@ -351,4 +358,3 @@ module SidekiqStatus
     end
   end
 end
-
