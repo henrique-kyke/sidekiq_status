@@ -23,7 +23,7 @@ module SidekiqStatus
     STATUSES_KEY          = 'sidekiq_statuses'.freeze
 
     class_attribute :ttl
-    self.ttl = 60*60*3 # 30 days
+    self.ttl = 0 # 30 days
 
     # Default attribute values (assigned to a newly created container if not explicitly defined)
     DEFAULTS = {
