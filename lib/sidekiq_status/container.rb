@@ -23,7 +23,7 @@ module SidekiqStatus
     STATUSES_KEY          = 'sidekiq_statuses'.freeze
 
     class_attribute :ttl
-    self.ttl = 30 # 30 days
+    self.ttl = 60*5 # 30 days
 
     # Default attribute values (assigned to a newly created container if not explicitly defined)
     DEFAULTS = {
@@ -336,12 +336,13 @@ module SidekiqStatus
     # @private
     # @param [Hash] data
     def load(data)
-      data = DEFAULTS.merge(data)
-
-      @args, @worker, @queue, @parent_id, @parent_class_name  = data.values_at('args', 'worker', 'queue', 'parent_id', 'parent_class_name')
-      @status, @at, @total, @message = data.values_at('status', 'at', 'total', 'message')
-      @payload                       = data['payload']
-      @last_updated_at               = data['last_updated_at'] && Time.at(data['last_updated_at'].to_i)
+      if data
+        data = DEFAULTS.merge(data)
+        @args, @worker, @queue, @parent_id, @parent_class_name  = data.values_at('args', 'worker', 'queue', 'parent_id', 'parent_class_name')
+        @status, @at, @total, @message = data.values_at('status', 'at', 'total', 'message')
+        @payload                       = data['payload']
+        @last_updated_at               = data['last_updated_at'] && Time.at(data['last_updated_at'].to_i)
+      end
     end
 
     # Dump current container attribute values to json-serializable hash
@@ -358,8 +359,8 @@ module SidekiqStatus
           'at'              => self.at,
           'total'           => self.total,
           'message'         => self.message,
-          'parent_id'          => self.parent_id,
-          'parent_class_name'          => self.parent_class_name,
+          'parent_id'       => self.parent_id,
+          'parent_class_name' => self.parent_class_name,
 
           'payload'         => self.payload,
           'last_updated_at' => Time.now.to_i
