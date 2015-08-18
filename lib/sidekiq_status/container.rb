@@ -23,7 +23,7 @@ module SidekiqStatus
     STATUSES_KEY          = 'sidekiq_statuses'.freeze
 
     class_attribute :ttl
-    self.ttl = 60*5 # 30 days
+    self.ttl = 60*60*24*5 # 30 days
 
     # Default attribute values (assigned to a newly created container if not explicitly defined)
     DEFAULTS = {
@@ -262,7 +262,7 @@ module SidekiqStatus
     # @return [Integer] Job progress in percents (reported solely by {SidekiqStatus::Worker job})
 
     def pct_complete
-      (at.to_f / total * 100).round
+      (@at.to_f / @total * 100).round if @at
     end
 
     # @param [Fixnum] at Report the progress of a job which is tracked by the current {SidekiqStatus::Container}

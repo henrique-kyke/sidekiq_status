@@ -42,6 +42,11 @@ module SidekiqStatus
         redirect to(:statuses)
       end
 
+      app.get '/statuses/delete/failed' do
+        SidekiqStatus::Container.delete('failed')
+        redirect to(:statuses)
+      end
+
       app.get '/statuses/delete/complete' do
         SidekiqStatus::Container.delete('complete')
         redirect to(:statuses)

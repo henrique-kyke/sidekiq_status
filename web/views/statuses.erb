@@ -5,6 +5,11 @@
   <a href="<%= to(:statuses) %>/delete/complete" onclick="return confirm('Are you sure? Delete is irreversible')">
     complete
   </a>
+  ,
+  &nbsp;
+  <a href="<%= to(:statuses) %>/delete/finished" onclick="return confirm('Are you sure? Delete is irreversible')" >
+    failed
+  </a>
   ,&nbsp;
   <a href="<%= to(:statuses) %>/delete/finished" onclick="return confirm('Are you sure? Delete is irreversible')" title="<%= SidekiqStatus::Container::FINISHED_STATUS_NAMES.join(', ') %>">
     finished
@@ -68,7 +73,6 @@
     background: -ms-linear-gradient(left,  #00cc00 0%,#00ff00 100%); /* IE10+ */
     background: linear-gradient(to right,  #00cc00 0%,#00ff00 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00cc00', endColorstr='#00ff00',GradientType=1 ); /* IE6-8 */
-
   }
 </style>
 
